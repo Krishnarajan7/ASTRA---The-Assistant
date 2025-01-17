@@ -1,0 +1,7 @@
+speechrecognition
+pyttsx3
+pyaudio
+numpy
+opencv-python
+scikit-learn
+requests
