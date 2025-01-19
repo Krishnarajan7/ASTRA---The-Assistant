@@ -9,6 +9,14 @@ def load_config():
     with open('config.json', 'r') as f:
         return json.load(f)
 
+def set_female_voice(tts_engine):
+    """Set the text-to-speech engine to use a female voice."""
+    voices = tts_engine.getProperty('voices')
+    for voice in voices:
+        if 'female' in voice.name.lower():
+            tts_engine.setProperty('voice', voice.id)
+            break
+
 def main():
     """Main function to run ASTRA."""
     # Load settings from config file
@@ -17,6 +25,9 @@ def main():
     # Initialize text-to-speech engine
     tts_engine = pyttsx3.init()
 
+    # Set the engine to use a female voice
+    set_female_voice(tts_engine)
+
     # Greet the user
     speech.greet_user(tts_engine)
 
@@ -24,11 +35,13 @@ def main():
     wake_word_detector = wakewords.WakeWord(config['wake_words'], tts_engine)
 
     while True:
-        command = speech.listen()
+        command = speech.listen(tts_engine)
+        print(f"Command received: {command}")
         
         if wake_word_detector.detect(command):
             speech.speak("Hello, how can I help you?", tts_engine)
-            command = speech.listen()
+            command = speech.listen(tts_engine)
+            print(f"Command after wake word: {command}")
 
             # Authentication (for critical actions)
             if "shutdown" in command or "restart" in command:
