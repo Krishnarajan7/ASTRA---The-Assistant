@@ -1,6 +1,6 @@
 import pyttsx3
 import speech_recognition as sr
-from astra import speech, tasks, authentication, wake_words, scheduler
+import speech, tasks, authentication, wakewords, scheduler
 import json
 import time
 
@@ -21,7 +21,7 @@ def main():
     speech.greet_user(tts_engine)
 
     # Set up wake word detection
-    wake_word_detector = wake_words.WakeWord(config['wake_words'], tts_engine)
+    wake_word_detector = wakewords.WakeWord(config['wake_words'], tts_engine)
 
     while True:
         command = speech.listen()
