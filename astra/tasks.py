@@ -8,7 +8,7 @@ def speak(text, engine):
     engine.say(text)
     engine.runAndWait()
 
-def open_application(app_name):
+def open_application(app_name, engine):
     """Open the specified application."""
     try:
         applications = {
@@ -26,13 +26,13 @@ def open_application(app_name):
     except Exception as e:
         speak(f"Error opening {app_name}: {e}", engine)
 
-def close_application(app_name):
+def close_application(app_name, engine):
     """Close the specified application."""
     try:
         applications = {
             "notepad": "notepad.exe",
-            "calculator": "calculator.exe",
-            "wordpad": "wordpad.exe",
+            "calculator": "calc.exe",
+            "wordpad": "write.exe",
             "paint": "mspaint.exe"
             # Add more applications as needed
         }
@@ -46,14 +46,17 @@ def close_application(app_name):
 
 def perform_task(command, engine):
     """Perform tasks based on the voice command."""
+    command = command.strip().lower()
+    print(f"Received command: {command}")
+    
     if "open" in command:
-        app_name = command.split("open ")[1]
+        app_name = command.split("open ")[1].strip()
         speak(f"Opening {app_name}", engine)
-        open_application(app_name)
+        open_application(app_name, engine)
     elif "close" in command:
-        app_name = command.split("close ")[1]
+        app_name = command.split("close ")[1].strip()
         speak(f"Closing {app_name}", engine)
-        close_application(app_name)
+        close_application(app_name, engine)
     elif "shutdown" in command:
         speak("Shutting down the system", engine)
         os.system("shutdown /s /t 1")
@@ -69,7 +72,19 @@ def perform_task(command, engine):
 if __name__ == "__main__":
     engine = pyttsx3.init()
     # Example commands to test the perform_task function
-    commands = ["open notepad", "close notepad", "open calculator", "close calculator", "open wordpad", "close wordpad", "open paint", "close paint", "shutdown", "restart", "open google"]
+    commands = [
+        "open notepad",
+        "close notepad",
+        "open calculator",
+        "close calculator",
+        "open wordpad",
+        "close wordpad",
+        "open paint",
+        "close paint",
+        "shutdown",
+        "restart",
+        "open google"
+    ]
     for command in commands:
         perform_task(command, engine)
         time.sleep(2)  # Adding a delay for demonstration purposes
